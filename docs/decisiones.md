@@ -56,7 +56,7 @@ Registro fase a fase de las decisiones técnicas: qué se hizo, por qué y qué 
 
 - **`Respond to Webhook` en lugar de responder al instante.** Así controlamos el código HTTP: `400` si los datos no son válidos, `200` con el `lead_id` cuando todo ha ido bien. Además, el cliente (la web) sabe si de verdad se guardó su mensaje.
 - **URL de test y URL de producción.** `/webhook-test/...` solo escucha mientras pulsas *Execute workflow* y muestra los datos en el lienzo. `/webhook/...` solo existe con el flujo activo/publicado, y sus ejecuciones se ven en *Executions*.
-- **Validación antes de llamar a la IA:** no se gasta una llamada a OpenAI (dinero y tiempo) con datos basura. Fallo real que tuve: el campo izquierdo del If estaba en modo *Fixed* y comparaba el texto literal `{{ $json.body.email }}`. En el JSON se distingue porque las expresiones empiezan por `=`.
+- **Validación antes de llamar a la IA:** no se gasta una llamada a OpenAI (dinero y tiempo) con datos basura. Detalle de n8n: un campo en modo *Fixed* compara el texto literal `{{ $json.body.email }}`; solo en modo *Expression* se evalúa. En el JSON exportado se distingue porque las expresiones empiezan por `=`.
 - **Basic LLM Chain + OpenAI Chat Model + Structured Output Parser.** La cadena junta el prompt y el modelo, y el parser obliga a que la salida cumpla un JSON Schema. Si no lo cumple, el nodo falla en lugar de dejar pasar datos malos.
 - **JSON Schema con `enum`** en vez de "generar desde un ejemplo": el esquema limita los valores posibles de `categoria` y `prioridad` a los que existen en Odoo, así que el modelo no puede inventarse una categoría.
 - **`temperature: 0`:** clasificar es una tarea determinista, y el mismo mensaje debe dar siempre la misma categoría. Una temperatura alta da variedad, útil para redactar y perjudicial para etiquetar.
@@ -194,7 +194,7 @@ Registro fase a fase de las decisiones técnicas: qué se hizo, por qué y qué 
 
 **Decisiones:**
 
-- **El README empieza por el negocio, no por la tecnología.** Quien lo abre primero (alguien de selección) necesita entender en 10 segundos qué problema resuelve. Los detalles técnicos van después, y el porqué de cada decisión está en este documento.
-- **Instalación reproducible:** el README sigue el orden real de dependencias: `.env` → contenedores → base de datos de Odoo + API keys → datos de prueba → usuario de solo lectura → credenciales de n8n → importar flujos (el 99 primero) → publicar. Incluye los avisos que me costó descubrir (Odoo 18 + "Username & Password", publicar el 99 antes de elegirlo).
+- **El README empieza por el negocio, no por la tecnología.** Quien lo abre primero, sea técnico o no, necesita entender en 10 segundos qué problema resuelve. Los detalles técnicos van después, y el porqué de cada decisión está en este documento.
+- **Instalación reproducible:** el README sigue el orden real de dependencias: `.env` → contenedores → base de datos de Odoo + API keys → datos de prueba → usuario de solo lectura → credenciales de n8n → importar flujos (el 99 primero) → publicar. Incluye los avisos que no son evidentes (Odoo 18 + "Username & Password", publicar el 99 antes de elegirlo).
 - **Auditoría de secretos en todo el historial** (`git log -p --all`), no solo en los ficheros actuales: un secreto borrado en un commit posterior sigue en el historial. Busqué cada valor real de `.env` y patrones de claves (`sk-…`, tokens de Telegram, el `chat_id`). Resultado: limpio. El único dato personal es el email de autor de los commits, que es normal en Git.
 - **Al importar los flujos en otra instalación:** el ID del flujo de errores cambia (hay que volver a elegirlo) y las credenciales se vuelven a seleccionar en cada nodo. La URL del chat se mantiene porque el `webhookId` va en el JSON.
