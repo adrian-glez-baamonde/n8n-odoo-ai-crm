@@ -121,6 +121,11 @@ def main() -> None:
         else:
             tag_ids[nombre] = call("crm.tag", "create", {"name": nombre, "color": color})
             print(f"  + etiqueta '{nombre}' creada")
+        # El nombre de la etiqueta es traducible (en BD es JSONB: {"en_US": ..., "es_ES": ...}).
+        # Sin contexto de idioma solo se guarda en_US; guardamos también es_ES para que
+        # las consultas SQL del asistente (fase 4) funcionen con cualquiera de los dos.
+        call("crm.tag", "write", [tag_ids[nombre]], {"name": nombre},
+             context={"lang": "es_ES"})
 
     # --- Etapas del pipeline (las crea Odoo al instalar CRM), ordenadas ---
     etapas = call("crm.stage", "search_read", [], fields=["name"], order="sequence, id")
