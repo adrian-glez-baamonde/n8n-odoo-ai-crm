@@ -12,3 +12,6 @@ venv/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Notas personales (no se publican)
+privado/

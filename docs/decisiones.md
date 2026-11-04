@@ -1,6 +1,6 @@
 # Decisiones técnicas y aprendizajes
 
-Registro fase a fase de qué se hizo, por qué, y qué aprendí. Base para preparar la entrevista.
+Registro fase a fase de las decisiones técnicas: qué se hizo, por qué y qué aprendí por el camino.
 
 ---
 
