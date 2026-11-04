@@ -1,0 +1,62 @@
+# n8n-odoo-ai-crm — infraestructura local
+# Arranque:  docker compose up -d
+# Parada:    docker compose down        (los datos se conservan en los volúmenes)
+# Reset:     docker compose down -v     (¡borra TODOS los datos!)
+
+services:
+  # Base de datos de Odoo. El asistente de IA (fase 4) también leerá de aquí
+  # con un usuario de solo lectura.
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+      TZ: ${TZ}
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # No se expone al host. Descomenta solo para depurar con DBeaver/psql:
+    # ports:
+    #   - "5432:5432"
+
+  odoo:
+    image: odoo:18
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy   # espera a que Postgres acepte conexiones
+    environment:
+      HOST: db                       # nombre del servicio = nombre DNS en la red de Compose
+      USER: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: ${TZ}
+    ports:
+      - "8069:8069"
+    volumes:
+      - odoo-web-data:/var/lib/odoo   # adjuntos, sesiones, filestore
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION}
+    restart: unless-stopped
+    environment:
+      GENERIC_TIMEZONE: ${TZ}         # zona horaria de los nodos Schedule/fechas de n8n
+      TZ: ${TZ}
+      WEBHOOK_URL: ${WEBHOOK_URL}     # URL pública con la que n8n construye las URLs de sus webhooks
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}  # cifra las credenciales guardadas en n8n
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      N8N_RUNNERS_ENABLED: "true"
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n-data:/home/node/.n8n      # flujos, credenciales y ejecuciones (SQLite)
+
+volumes:
+  odoo-db-data:
+  odoo-web-data:
+  n8n-data:
