@@ -122,3 +122,26 @@ Registro fase a fase de qué se hizo, por qué, y qué aprendí. Base para prepa
 - una vista SQL (`v_leads`) con los nombres de etiqueta y etapa ya resueltos, que simplifica el SQL del agente y reduce errores;
 - autenticación en el chat interno;
 - registro de las consultas que genera el agente, para auditoría.
+
+---
+
+## Fase 5 — Flujo 99: gestión de errores
+
+**Qué:** `Error Trigger` → Telegram con el flujo, el nodo que falló, la hora, el mensaje de error y un enlace a la ejecución. Está configurado como *Error Workflow* de los flujos 01 y 02. Exportado en `workflows/99-gestion-errores.json`.
+
+**Decisiones:**
+
+- **Un único flujo de errores compartido:** el aviso se configura una vez y lo reutilizan todos los flujos (*Settings → Error Workflow*). Sin él, un fallo en producción pasaría en silencio y se perdería el lead.
+- **Solo salta con ejecuciones de producción** (flujo publicado + URL `/webhook/`), no con las manuales del editor, porque ahí ya ves el error en pantalla. Por eso la prueba se hizo publicando el flujo 01.
+- **En n8n 2.x, el flujo de errores tiene que estar publicado** para poder elegirlo en el desplegable de *Error Workflow*.
+- **Publicar = versión:** cada publicación lleva un nombre de versión, y se puede volver a una versión anterior desde el historial, como una etiqueta de Git.
+- **Escapar el mensaje de error** (`&`, `<`, `>`) antes de enviarlo en HTML: los errores suelen contener esos caracteres. Si no se escapan, el propio aviso fallaría, justo cuando más falta hace. Es la lección de *escaping* de la Fase 3 aplicada de antemano.
+- **Prueba realizada:**
+  1. Puse una API key de OpenAI incorrecta y llamé a la URL de producción.
+  2. El cliente recibió `500 {"message":"Error in workflow"}` y llegó el aviso por Telegram con el nodo y el error.
+  3. Restauré la clave y el flujo volvió a funcionar.
+- **Al importar en otra instalación:** el ajuste `errorWorkflow` guarda el ID interno del flujo 99, que cambia entre instalaciones. Tras importar, hay que volver a elegirlo en *Settings*.
+
+**Mejoras futuras:**
+- reintentos automáticos en los nodos que llaman a APIs externas (*Settings del nodo → Retry On Fail*) antes de dar el error por bueno;
+- un mensaje de error amable para el cliente de la web en lugar del 500 genérico (rama de error del nodo + `Respond to Webhook`).

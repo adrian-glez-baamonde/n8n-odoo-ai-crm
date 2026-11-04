@@ -1,0 +1,69 @@
+{
+  "id": "puQnKoRfN8HXiqje",
+  "name": "99 - Gestión de errores",
+  "description": null,
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "141a70bd-d60e-45dc-9488-12d20cc48c7b",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "chatId": "TU_CHAT_ID",
+        "text": "=⚠️ <b>Error en n8n</b>\n\n<b>Flujo:</b> {{ $json.workflow.name }}\n<b>Nodo:</b> {{ $json.execution.lastNodeExecuted }}\n<b>Hora:</b> {{ $now.toFormat('dd/MM/yyyy HH:mm:ss') }}\n\n<b>Error:</b> {{ ($json.execution.error.message || '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;') }}\n\nVer ejecución: {{ $json.execution.url }}\n",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "HTML"
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "39249123-b975-4bb1-8e11-77953ce7f798",
+      "name": "Telegram",
+      "webhookId": "6fda6605-cfb5-40c5-a1cb-ba519b03505c",
+      "credentials": {
+        "telegramApi": {
+          "id": "KS0LwTf5JAk9W7tY",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "staticData": null,
+  "nodeGroups": [],
+  "versionCounter": 9,
+  "sourceWorkflowId": null,
+  "versionMetadata": {
+    "name": "v1 - Aviso de errores por Telegram",
+    "description": ""
+  }
+}
