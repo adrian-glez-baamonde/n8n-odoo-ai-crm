@@ -182,3 +182,19 @@ Registro fase a fase de qué se hizo, por qué, y qué aprendí. Base para prepa
   2. Se creó el lead 31: Queja, 3 estrellas. Llegó el aviso por Telegram.
   3. En el panel interno, el asistente identificó esa queja como la última que había entrado.
   4. Probé también un email incorrecto (aviso en el navegador) y n8n parado (mensaje de error amable).
+
+---
+
+## Fase 7 — Documentación y portfolio
+
+**Qué:**
+- `README.md`: problema, solución, arquitectura, tecnologías, instalación paso a paso, flujos y mejoras.
+- `docs/arquitectura.md`: diagrama, componentes, recorrido de un mensaje y de una pregunta, y tabla de seguridad.
+- Auditoría de secretos.
+
+**Decisiones:**
+
+- **El README empieza por el negocio, no por la tecnología.** Quien lo abre primero (alguien de selección) necesita entender en 10 segundos qué problema resuelve. Los detalles técnicos van después, y el porqué de cada decisión está en este documento.
+- **Instalación reproducible:** el README sigue el orden real de dependencias: `.env` → contenedores → base de datos de Odoo + API keys → datos de prueba → usuario de solo lectura → credenciales de n8n → importar flujos (el 99 primero) → publicar. Incluye los avisos que me costó descubrir (Odoo 18 + "Username & Password", publicar el 99 antes de elegirlo).
+- **Auditoría de secretos en todo el historial** (`git log -p --all`), no solo en los ficheros actuales: un secreto borrado en un commit posterior sigue en el historial. Busqué cada valor real de `.env` y patrones de claves (`sk-…`, tokens de Telegram, el `chat_id`). Resultado: limpio. El único dato personal es el email de autor de los commits, que es normal en Git.
+- **Al importar los flujos en otra instalación:** el ID del flujo de errores cambia (hay que volver a elegirlo) y las credenciales se vuelven a seleccionar en cada nodo. La URL del chat se mantiene porque el `webhookId` va en el JSON.
