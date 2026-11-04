@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moda Norte · Asistente CRM</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@n8n/chat@1.43.1/dist/style.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="internal">
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">Moda <span>Norte</span></a>
+      <span class="badge">Panel interno</span>
+    </div>
+  </header>
+
+  <main class="container internal-main">
+    <div class="internal-intro">
+      <h1>Asistente CRM</h1>
+      <p>Consulta los leads de Odoo en lenguaje natural o registra una oportunidad nueva.</p>
+      <ul class="examples">
+        <li>¿Cuántos leads hay por categoría?</li>
+        <li>¿Cuáles son las quejas de prioridad alta de esta semana?</li>
+        <li>Crea un lead para Marta García, marta@ejemplo.com, quiere 50 camisetas</li>
+      </ul>
+      <p class="notice">Demo local sin autenticación. En producción esta página y el chat irían protegidos con login, porque el asistente puede leer datos de clientes.</p>
+    </div>
+    <div id="n8n-chat" class="chat-box"></div>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

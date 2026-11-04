@@ -56,6 +56,15 @@ services:
     volumes:
       - n8n-data:/home/node/.n8n      # flujos, credenciales y ejecuciones (SQLite)
 
+  # Web estática de la tienda (formulario + chat). Solo sirve archivos: no tiene lógica.
+  web:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    volumes:
+      - ./web:/usr/share/nginx/html:ro   # solo lectura: el contenedor no puede modificar la web
+
 volumes:
   odoo-db-data:
   odoo-web-data:

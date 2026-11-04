@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moda Norte · Ropa hecha para el norte</title>
+  <meta name="description" content="Tienda online de ropa de Moda Norte: abrigos, punto y básicos para el clima del norte.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo">Moda <span>Norte</span></a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#coleccion">Colección</a>
+        <a href="#ventajas">Envíos</a>
+        <a href="#contacto" class="nav-cta">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <p class="eyebrow">Colección otoño · invierno</p>
+          <h1>Ropa hecha para el norte.</h1>
+          <p class="lead">Lana, punto y básicos de algodón pensados para la lluvia, el viento y los días largos. Diseñados en Asturias, enviados a toda España.</p>
+          <div class="hero-actions">
+            <a href="#coleccion" class="btn btn-primary">Ver colección</a>
+            <a href="#contacto" class="btn btn-ghost">Escríbenos</a>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="swatch swatch-1"></div>
+          <div class="swatch swatch-2"></div>
+          <div class="swatch swatch-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="coleccion" class="section">
+      <div class="container">
+        <h2>Lo más vendido</h2>
+        <div class="grid">
+          <article class="card">
+            <div class="card-img img-abrigo" aria-hidden="true"></div>
+            <h3>Abrigo de lana gris</h3>
+            <p class="price">89,00 €</p>
+          </article>
+          <article class="card">
+            <div class="card-img img-jersey" aria-hidden="true"></div>
+            <h3>Jersey de punto beige</h3>
+            <p class="price">59,90 €</p>
+          </article>
+          <article class="card">
+            <div class="card-img img-camisa" aria-hidden="true"></div>
+            <h3>Camisa de lino blanca</h3>
+            <p class="price">49,00 €</p>
+          </article>
+          <article class="card">
+            <div class="card-img img-camiseta" aria-hidden="true"></div>
+            <h3>Camiseta básica algodón</h3>
+            <p class="price">14,90 €</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="ventajas" class="section section-alt">
+      <div class="container perks">
+        <div class="perk">
+          <strong>Envío en 48 h</strong>
+          <span>Gratis a partir de 50 € en península.</span>
+        </div>
+        <div class="perk">
+          <strong>30 días para devolver</strong>
+          <span>Cambios y devoluciones sin preguntas.</span>
+        </div>
+        <div class="perk">
+          <strong>Respuesta en menos de 24 h</strong>
+          <span>Tu mensaje llega directo a nuestro equipo.</span>
+        </div>
+        <div class="perk">
+          <strong>Venta a profesionales</strong>
+          <span>Condiciones especiales para tiendas y empresas.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto" class="section">
+      <div class="container contact">
+        <div class="contact-text">
+          <h2>¿Hablamos?</h2>
+          <p>Pedidos, devoluciones, tallas o compras al por mayor: cuéntanos qué necesitas y te respondemos lo antes posible.</p>
+          <p class="muted">Respondemos en español e inglés.</p>
+        </div>
+
+        <form id="contact-form" class="form" novalidate>
+          <div class="field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" name="nombre" type="text" autocomplete="name" required maxlength="100">
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" required maxlength="150">
+            </div>
+            <div class="field">
+              <label for="telefono">Teléfono <span class="optional">(opcional)</span></label>
+              <input id="telefono" name="telefono" type="tel" autocomplete="tel" maxlength="30">
+            </div>
+          </div>
+          <div class="field">
+            <label for="mensaje">Mensaje</label>
+            <textarea id="mensaje" name="mensaje" rows="5" required maxlength="2000"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Enviar mensaje</button>
+          <p id="form-status" class="form-status" role="status" aria-live="polite" hidden></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© Moda Norte · Tienda ficticia para un proyecto de portfolio</span>
+      <a href="interno.html">Acceso equipo</a>
+    </div>
+  </footer>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
