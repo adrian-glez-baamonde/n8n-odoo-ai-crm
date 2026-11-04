@@ -145,3 +145,40 @@ Registro fase a fase de qué se hizo, por qué, y qué aprendí. Base para prepa
 **Mejoras futuras:**
 - reintentos automáticos en los nodos que llaman a APIs externas (*Settings del nodo → Retry On Fail*) antes de dar el error por bueno;
 - un mensaje de error amable para el cliente de la web en lugar del 500 genérico (rama de error del nodo + `Respond to Webhook`).
+
+---
+
+## Fase 6 — Web de la tienda
+
+**Qué:**
+- `web/index.html`: la tienda, con el formulario de contacto que envía al flujo 01.
+- `web/interno.html`: el panel del equipo, con el widget `@n8n/chat` conectado al flujo 02.
+- `web/app.js`: la lógica, con la configuración (URLs) al principio.
+- `web/styles.css`: los estilos.
+- Se sirve con un contenedor `nginx` en el Compose, en `http://localhost:8080`.
+
+**Decisiones:**
+
+- **El chat no va en la web pública, sino en una página interna.** El asistente puede leer todos los leads, con emails y teléfonos de clientes. En la portada, cualquier visitante podría pedirle esos datos. Es una fuga de datos personales (RGPD), aunque la base de datos sea de solo lectura. En producción, el panel y el Chat Trigger irían con autenticación (el nodo admite Basic Auth o usuarios de n8n).
+- **`nginx` en el Compose en lugar de `python -m http.server`:** un solo `docker compose up -d` levanta todo. La carpeta se monta en solo lectura (`:ro`).
+- **El puerto 8000 estaba ocupado por Portainer:** la web va en el 8080, configurable con `WEB_PORT`. Si se cambia, hay que actualizar *Allowed Origins (CORS)* en el Chat Trigger.
+- **CORS:** el navegador bloquea las peticiones de `localhost:8080` a `localhost:5678` (son orígenes distintos) salvo que el servidor lo permita.
+  - Antes del POST, el navegador manda una petición de comprobación (`OPTIONS`, el *preflight*), y n8n responde con `Access-Control-Allow-Origin`.
+  - El Webhook del flujo 01 permite cualquier origen por defecto. El chat solo permite `http://localhost:8080`.
+  - CORS solo lo aplica el navegador: `curl` lo ignora. Por eso **no es un mecanismo de seguridad del servidor**.
+- **Doble validación:**
+  - la del navegador avisa al instante y evita una petición inútil;
+  - la de n8n es la que protege de verdad, porque cualquiera puede llamar al webhook con `curl` sin pasar por la web.
+- **Estados del formulario:** botón desactivado con "Enviando…" mientras se espera (evita envíos duplicados) y mensajes distintos para cada caso:
+  - éxito;
+  - `400` (datos incorrectos);
+  - error genérico, que cubre el `500` de un flujo roto, n8n caído y una espera de más de 30 s (`AbortController`).
+
+  El cliente nunca ve un error técnico. El equipo recibe el aviso por Telegram gracias al flujo 99.
+- **Widget `@n8n/chat` desde CDN con versión fija** (`@1.43.1`): con una versión fija, una actualización de la librería no puede romper la web sin aviso.
+- **El chat solo funciona con el flujo 02 publicado:** la web usa la URL de producción.
+- **Prueba completa desde el navegador:**
+  1. Envié un formulario urgente ("abrigo roto, regalo para el sábado").
+  2. Se creó el lead 31: Queja, 3 estrellas. Llegó el aviso por Telegram.
+  3. En el panel interno, el asistente identificó esa queja como la última que había entrado.
+  4. Probé también un email incorrecto (aviso en el navegador) y n8n parado (mensaje de error amable).

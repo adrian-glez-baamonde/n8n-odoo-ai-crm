@@ -9,7 +9,7 @@
         "public": true,
         "mode": "webhook",
         "options": {
-          "allowedOrigins": "http://localhost:8000"
+          "allowedOrigins": "http://localhost:8080"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
@@ -1382,10 +1382,10 @@
   },
   "staticData": null,
   "nodeGroups": [],
-  "versionCounter": 56,
+  "versionCounter": 57,
   "sourceWorkflowId": null,
   "versionMetadata": {
-    "name": null,
-    "description": null
+    "name": "v1 - Asistente CRM",
+    "description": ""
   }
 }
